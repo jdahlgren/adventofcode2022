@@ -2,20 +2,19 @@ package se.johannesdahlgren
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class Day1Test {
 
-    private lateinit var day1: Day1
-
-    @BeforeEach
-    fun setUp() {
-        day1 = Day1()
+    @Test
+    fun part1Example() {
+        val day1 = Day1("day1Example")
+        assertThat(day1.getCarriedCaloriesByElfCarryingMost(), `is`(24000))
     }
 
     @Test
-    fun calc() {
-        assertThat(day1.calc(), `is`("hej"))
+    fun part1() {
+        val day1 = Day1("day1")
+        assertThat(day1.getCarriedCaloriesByElfCarryingMost(), `is`(72511))
     }
 }
