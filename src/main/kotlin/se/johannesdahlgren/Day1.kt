@@ -7,6 +7,19 @@ class Day1(private val fileName: String) {
     data class Elf(var calories: Int)
 
     fun getCarriedCaloriesByElfCarryingMost(): Int {
+        val elves = calculateCarriedCaloriesByElf()
+        return elves.maxOf { it.calories }
+    }
+
+    fun getCarriedCaloriesByTop3ElvesCarryingMost(): Int {
+        val elves = calculateCarriedCaloriesByElf()
+        elves.sortByDescending { it.calories }
+        return elves
+            .take(3)
+            .sumOf { it.calories }
+    }
+
+    private fun calculateCarriedCaloriesByElf(): MutableList<Elf> {
         val input = FileReader.readFileAsStringList(fileName)
         var elf = Elf(0)
         val elves = mutableListOf<Elf>()
@@ -18,7 +31,7 @@ class Day1(private val fileName: String) {
                 elf.calories = elf.calories.plus(calories.toInt())
             }
         }
-
-        return elves.maxOf { it.calories }
+        elves.add(elf)
+        return elves
     }
 }

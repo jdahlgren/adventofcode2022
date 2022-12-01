@@ -17,4 +17,16 @@ class Day1Test {
         val day1 = Day1("day1")
         assertThat(day1.getCarriedCaloriesByElfCarryingMost(), `is`(72511))
     }
+
+    @Test
+    fun part2Example() {
+        val day1 = Day1("day1Example")
+        assertThat(day1.getCarriedCaloriesByTop3ElvesCarryingMost(), `is`(45000))
+    }
+
+    @Test
+    fun part2() {
+        val day1 = Day1("day1")
+        assertThat(day1.getCarriedCaloriesByTop3ElvesCarryingMost(), `is`(212117))
+    }
 }
