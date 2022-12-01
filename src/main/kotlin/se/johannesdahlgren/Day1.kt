@@ -15,23 +15,17 @@ class Day1(private val fileName: String) {
         val elves = calculateCarriedCaloriesByElf()
         elves.sortByDescending { it.calories }
         return elves
-            .take(3)
-            .sumOf { it.calories }
+                .take(3)
+                .sumOf { it.calories }
     }
 
     private fun calculateCarriedCaloriesByElf(): MutableList<Elf> {
-        val input = FileReader.readFileAsStringList(fileName)
-        var elf = Elf(0)
-        val elves = mutableListOf<Elf>()
-        for (calories in input) {
-            if (calories == "") {
-                elves.add(elf)
-                elf = Elf(0)
-            } else {
-                elf.calories = elf.calories.plus(calories.toInt())
-            }
-        }
-        elves.add(elf)
-        return elves
+        return FileReader.readFileAsStringSplitEmptyLine(fileName)
+                .map { food ->
+                    food.lines()
+                            .map { calories -> calories.toInt() }
+                }
+                .map { Elf(it.sum()) }
+                .toMutableList()
     }
 }
