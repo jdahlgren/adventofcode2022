@@ -3,30 +3,22 @@ package se.johannesdahlgren
 import se.johannesdahlgren.util.FileReader
 
 class Day2(private val filename: String) {
+    private val desiredResult = mapOf(Pair("X", Result.LOSE), Pair("Y", Result.DRAW), Pair("Z", Result.WIN))
+    private val move = mapOf(
+        Pair("X", Move.ROCK), Pair("Y", Move.PAPER), Pair("Z", Move.SCISSORS),
+        Pair("A", Move.ROCK), Pair("B", Move.PAPER), Pair("C", Move.SCISSORS)
+    )
 
     enum class Result {
         WIN,
         LOSE,
         DRAW;
 
-        fun getMove(move: Move): Move {
+        fun useMoveToBeat(move: Move): Move {
             return when (this) {
-                WIN -> move.looses()
+                WIN -> move.loosesTo()
                 LOSE -> move.beats()
                 DRAW -> move
-            }
-        }
-
-        companion object {
-            fun getResult(result: String): Result {
-                return when (result) {
-                    "X" -> LOSE
-                    "Y" -> DRAW
-                    "Z" -> WIN
-                    else -> {
-                        throw RuntimeException("Bad win input")
-                    }
-                }
             }
         }
     }
@@ -36,19 +28,6 @@ class Day2(private val filename: String) {
         PAPER,
         SCISSORS;
 
-        companion object {
-            fun getMove(move: String): Move {
-                return when (move) {
-                    "A", "X" -> ROCK
-                    "B", "Y" -> PAPER
-                    "C", "Z" -> SCISSORS
-                    else -> {
-                        throw RuntimeException("Bad move input")
-                    }
-                }
-            }
-        }
-
         fun beats(): Move {
             return when (this) {
                 ROCK -> SCISSORS
@@ -57,7 +36,7 @@ class Day2(private val filename: String) {
             }
         }
 
-        fun looses(): Move {
+        fun loosesTo(): Move {
             return when (this) {
                 ROCK -> PAPER
                 PAPER -> SCISSORS
@@ -69,12 +48,10 @@ class Day2(private val filename: String) {
 
     data class Round(val myMove: Move, val opponentMove: Move) {
         fun getWinnerScore(): Int {
-            return if (myMove.beats() == opponentMove) {
-                6
-            } else if (opponentMove.beats() == myMove) {
-                0
-            } else {
-                3
+            return when (opponentMove) {
+                myMove.beats() -> 6
+                myMove.loosesTo() -> 0
+                else -> 3
             }
         }
     }
@@ -82,7 +59,7 @@ class Day2(private val filename: String) {
     fun getTotalScore(): Int {
         return FileReader.readFileLinesAsString(filename)
             .map { it.split(" ") }
-            .map { Round(Move.getMove(it.last()), Move.getMove(it.first())) }
+            .map { Round(move[it.last()]!!, move[it.first()]!!) }
             .sumOf { calculateScore(it) }
     }
 
@@ -90,10 +67,9 @@ class Day2(private val filename: String) {
         return FileReader.readFileLinesAsString(filename)
             .map { it.split(" ") }
             .map {
-                Round(
-                    Result.getResult(it.last())
-                        .getMove(Move.getMove(it.first())), Move.getMove(it.first())
-                )
+                val opponentMove = move[it.first()]!!
+                val myMove = desiredResult[it.last()]!!.useMoveToBeat(opponentMove)
+                Round(myMove, opponentMove)
             }
             .sumOf { calculateScore(it) }
     }
