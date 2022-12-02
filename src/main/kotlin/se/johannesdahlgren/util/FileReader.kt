@@ -6,7 +6,13 @@ class FileReader {
         fun readFileAsStringSplitEmptyLine(fileName: String): List<String> {
             val filePath = "/$fileName.txt"
             return FileReader::class.java.getResource(filePath)!!.readText()
-                    .split("\r\n\r\n")
+                .split("\r\n\r\n")
+        }
+
+        fun readFileLinesAsString(fileName: String): List<String> {
+            val filePath = "/$fileName.txt"
+            return FileReader::class.java.getResource(filePath)!!.readText()
+                .lines()
         }
     }
 }
