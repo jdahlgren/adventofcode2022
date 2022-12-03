@@ -1,4 +1,4 @@
-package se.johannesdahlgren
+package se.johannesdahlgren.aoc22
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is.`is`

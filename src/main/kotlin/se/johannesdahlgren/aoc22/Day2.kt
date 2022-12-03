@@ -1,6 +1,6 @@
-package se.johannesdahlgren
+package se.johannesdahlgren.aoc22
 
-import se.johannesdahlgren.util.FileReader
+import se.johannesdahlgren.aoc22.util.FileReader
 
 class Day2(private val filename: String) {
     private val desiredResult = mapOf(Pair("X", Result.LOSE), Pair("Y", Result.DRAW), Pair("Z", Result.WIN))

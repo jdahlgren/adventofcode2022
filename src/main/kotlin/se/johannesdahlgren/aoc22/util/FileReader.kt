@@ -1,4 +1,4 @@
-package se.johannesdahlgren.util
+package se.johannesdahlgren.aoc22.util
 
 class FileReader {
     companion object {
