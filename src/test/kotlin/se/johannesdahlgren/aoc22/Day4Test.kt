@@ -17,4 +17,16 @@ class Day4Test {
         val day4 = Day4("day4")
         assertThat(day4.numberOfAssignmentPairsFullyContained(), `is`(515))
     }
+
+    @Test
+    fun part2Example() {
+        val day4 = Day4("day4Example")
+        assertThat(day4.numberOfAssignmentPairsOverlap(), `is`(4))
+    }
+
+    @Test
+    fun part2() {
+        val day4 = Day4("day4")
+        assertThat(day4.numberOfAssignmentPairsOverlap(), `is`(883))
+    }
 }
