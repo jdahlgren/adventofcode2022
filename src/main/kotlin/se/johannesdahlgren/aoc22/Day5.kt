@@ -16,15 +16,39 @@ class Day5(private val fileName: String) {
             .joinToString(separator = "")
     }
 
+    fun getCratesOnTopMultiCrate(): String {
+        val input = FileReader.readFileAsStringSplitEmptyLine(fileName)
+        val test = toCratesAndMovementProcedure(input)
+        test.procedure.forEach { moveCrates(it, test.crates) }
+        return test.crates.map { it.first() }
+            .joinToString(separator = "")
+    }
+
     private fun moveCrate(procedure: Procedure, crates: List<ArrayDeque<Char>>) {
         (0 until procedure.numberOfStacks).forEach { _ ->
             makeMove(crates, procedure.from, procedure.to)
         }
     }
 
+    private fun moveCrates(procedure: Procedure, crates: List<ArrayDeque<Char>>) {
+        makeMove(crates, procedure)
+    }
+
     private fun makeMove(crates: List<ArrayDeque<Char>>, from: Int, to: Int) {
         val crateToMove = crates[from - 1].removeFirst()
         crates[to - 1].addFirst(crateToMove)
+    }
+
+    private fun makeMove(crates: List<ArrayDeque<Char>>, procedure: Procedure) {
+        val temp = ArrayDeque<Char>()
+        (0 until procedure.numberOfStacks).forEach { _ ->
+            val crateToMove = crates[procedure.from - 1].removeFirst()
+            temp.addFirst(crateToMove)
+        }
+        (0 until procedure.numberOfStacks).forEach { _ ->
+            val crateToMove = temp.removeFirst()
+            crates[procedure.to - 1].addFirst(crateToMove)
+        }
     }
 
     private fun toCratesAndMovementProcedure(input: List<String>): CratesAndMovementProcedure {

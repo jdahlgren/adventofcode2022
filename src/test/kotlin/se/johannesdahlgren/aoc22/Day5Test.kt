@@ -17,4 +17,16 @@ class Day5Test {
         assertThat(day5.getCratesOnTop(), `is`("FZCMJCRHZ"))
     }
 
+    @Test
+    fun part2Example() {
+        val day5 = Day5("day5Example")
+        assertThat(day5.getCratesOnTopMultiCrate(), `is`("MCD"))
+    }
+
+    @Test
+    fun part2() {
+        val day5 = Day5("day5")
+        assertThat(day5.getCratesOnTopMultiCrate(), `is`("JSDHQMZGF"))
+    }
+
 }
