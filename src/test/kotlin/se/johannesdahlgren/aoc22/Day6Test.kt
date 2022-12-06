@@ -40,4 +40,40 @@ class Day6Test {
         val day6 = Day6("day6")
         assertThat(day6.getStartOfPacketMarker(), `is`(1109))
     }
+
+    @Test
+    fun part2Example1() {
+        val day6 = Day6("day6Example1")
+        assertThat(day6.getStartOfMessageMarker(), `is`(19))
+    }
+
+    @Test
+    fun part2Example2() {
+        val day6 = Day6("day6Example2")
+        assertThat(day6.getStartOfMessageMarker(), `is`(23))
+    }
+
+    @Test
+    fun part2Example3() {
+        val day6 = Day6("day6Example3")
+        assertThat(day6.getStartOfMessageMarker(), `is`(23))
+    }
+
+    @Test
+    fun part2Example4() {
+        val day6 = Day6("day6Example4")
+        assertThat(day6.getStartOfMessageMarker(), `is`(29))
+    }
+
+    @Test
+    fun part2Example5() {
+        val day6 = Day6("day6Example5")
+        assertThat(day6.getStartOfMessageMarker(), `is`(26))
+    }
+
+    @Test
+    fun part2() {
+        val day6 = Day6("day6")
+        assertThat(day6.getStartOfMessageMarker(), `is`(3965))
+    }
 }
