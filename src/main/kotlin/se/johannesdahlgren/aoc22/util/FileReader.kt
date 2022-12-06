@@ -14,5 +14,12 @@ class FileReader {
             return FileReader::class.java.getResource(filePath)!!.readText()
                 .lines()
         }
+
+        fun readFileAsString(fileName: String): String {
+            val filePath = "/$fileName.txt"
+            return FileReader::class.java.getResource(filePath)!!.readText()
+                .lines()
+                .first()
+        }
     }
 }
