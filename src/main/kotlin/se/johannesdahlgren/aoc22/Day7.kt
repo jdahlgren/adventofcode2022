@@ -9,6 +9,7 @@ class Day7(private val fileName: String) {
     private val dir = "dir"
     private val cdCommandLength = commandStart.length + cd.length + 2
     private val fileRegex = Regex("(\\d+) (.+)")
+    private val fileSystemSize = 70000000
 
     data class Directory(
         val name: String,
@@ -27,9 +28,19 @@ class Day7(private val fileName: String) {
             .sumOf { getFolderSize(it) }
     }
 
+    fun findSmallestFolder(sizeNeededForUpdate: Long): Long {
+        val terminalOutput = FileReader.readFileLinesAsString(fileName)
+        val root = setupFileSystem(terminalOutput)
+        val unusedSpace = fileSystemSize - getFolderSize(root)
+        val spaceToClear = sizeNeededForUpdate - unusedSpace
+
+        return getAllFolders(root)
+            .filter { getFolderSize(it) >= spaceToClear }
+            .minOf { getFolderSize(it) }
+    }
+
     private fun getAllFolders(directory: Directory): List<Directory> {
         return directory.directories + directory.directories.flatMap { getAllFolders(it) }
-
     }
 
     private fun getFolderSize(directory: Directory): Long {
