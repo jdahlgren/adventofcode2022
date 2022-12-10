@@ -58,65 +58,30 @@ class Day9(private val fileName: String) {
         }
     }
 
-    private var head = Pos(0, 0)
-    private var tail = Pos(0, 0)
-    private var tailLocations = mutableSetOf(tail)
+    private var tailLocations = mutableSetOf<Pos>()
 
-    fun calcTailUniqueVisits(): Int {
-//        printRope()
+    fun calcTailUniqueVisits(numberOfKnots: Int): Int {
+        val knots = (0 until numberOfKnots)
+            .map { Pos(0, 0) }
+            .toList()
+
         FileReader.readFileLinesAsString(fileName)
             .map {
                 val split = it.split(" ")
                 Instruction(split.first().doDirection(), split.last().toInt())
             }
-            .forEach { move(it) }
-//        printTailLocations()
+            .forEach { move(it, knots) }
         return tailLocations.size
     }
 
-    private fun move(instruction: Instruction) {
-//        println(instruction)
+    private fun move(instruction: Instruction, knots: List<Pos>) {
         for (i in 0 until instruction.steps) {
-            head.move(instruction.direction)
-            tail.follow(head)
-            tailLocations.add(tail.copy())
-//            printRope()
+            tailLocations.add(knots.last().copy())
+            knots.first().move(instruction.direction)
+            knots.windowed(2)
+                .forEach { it.last().follow(it.first()) }
+            tailLocations.add(knots.last().copy())
         }
-    }
-
-    private fun printRope() {
-        for (i in 4 downTo 0) {
-            for (j in 0 until 6) {
-                if (head.x == j && head.y == i) {
-                    print("H")
-                } else if (tail.x == j && tail.y == i) {
-                    print("T")
-                } else if (i == 0 && j == 0) {
-                    print("s")
-                } else {
-
-                    print(".")
-                }
-            }
-            println()
-        }
-        println()
-    }
-
-    private fun printTailLocations() {
-        for (i in 4 downTo 0) {
-            for (j in 0 until 6) {
-                if (tailLocations.contains(Pos(j, i))) {
-                    print("#")
-                } else if (i == 0 && j == 0) {
-                    print("s")
-                } else {
-                    print(".")
-                }
-            }
-            println()
-        }
-        println()
     }
 }
 
