@@ -16,4 +16,16 @@ class Day8Test {
         val day8 = Day8("day8")
         assertThat(day8.visibleTrees(), Is.`is`(1814))
     }
+
+    @Test
+    fun part2Example() {
+        val day8 = Day8("day8Example")
+        assertThat(day8.scenicScore(), Is.`is`(8))
+    }
+
+    @Test
+    fun part2() {
+        val day8 = Day8("day8")
+        assertThat(day8.scenicScore(), Is.`is`(330786))
+    }
 }

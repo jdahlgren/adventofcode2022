@@ -22,6 +22,15 @@ data class Pos(var x: Int, var y: Int) {
         }
     }
 
+    fun getNextPos(direction: Direction): Pos {
+        return when (direction) {
+            Direction.UP -> Pos(x, y + 1)
+            Direction.DOWN -> Pos(x, y - 1)
+            Direction.RIGHT -> Pos(x + 1, y)
+            Direction.LEFT -> Pos(x - 1, y)
+        }
+    }
+
     fun follow(otherPos: Pos) {
         if (!isAdjacentOrOverlapping(otherPos)) {
             when {

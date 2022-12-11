@@ -1,5 +1,6 @@
 package se.johannesdahlgren.aoc22
 
+import se.johannesdahlgren.aoc22.util.Direction
 import se.johannesdahlgren.aoc22.util.FileReader
 import se.johannesdahlgren.aoc22.util.Pos
 
@@ -28,6 +29,15 @@ class Day8(val fileName: String) {
             return temp.map {
                 it.toList()
             }
+        }
+
+        fun getNextElementIn(direction: Direction, currentElement: GridElement): GridElement? {
+            val nextPos = currentElement.pos.getNextPos(direction)
+            return data.map { row ->
+                row.map { it }
+            }
+                .flatten()
+                .firstOrNull { it.pos == nextPos }
         }
     }
 
@@ -67,6 +77,39 @@ class Day8(val fileName: String) {
         visitReversed(grid.getCols())
 
         return edges + grid.getRows().map { row -> row.map { it } }.flatten().count { it.isVisible() }
+    }
+
+    fun scenicScore(): Int {
+        val heightMap = FileReader.readFileLinesAsString(fileName)
+            .mapIndexed { i, line ->
+                line.toCharArray().mapIndexed { j, col -> GridElement(Pos(j, i), col.digitToInt(), 0) }
+            }
+        val grid = Grid(heightMap)
+        return grid.getRows().map { row -> row.map { it } }
+            .flatten()
+            .map { getScenicScore(it, grid) }
+            .max()
+    }
+
+    private fun getScenicScore(it: GridElement, grid: Grid): Int {
+        return getSubScenicScore(Direction.UP, it, grid)
+            .times(getSubScenicScore(Direction.DOWN, it, grid))
+            .times(getSubScenicScore(Direction.RIGHT, it, grid))
+            .times(getSubScenicScore(Direction.LEFT, it, grid))
+    }
+
+    private fun getSubScenicScore(direction: Direction, gridElement: GridElement, grid: Grid): Int {
+        val height = gridElement.value
+        var subScenicScore = 0
+        var nextElement = grid.getNextElementIn(direction, gridElement)
+        while (nextElement != null && nextElement.value < height) {
+            subScenicScore++
+            nextElement = grid.getNextElementIn(direction, nextElement)
+        }
+        if (nextElement != null) {
+            subScenicScore++
+        }
+        return subScenicScore
     }
 
 }
