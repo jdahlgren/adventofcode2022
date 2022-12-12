@@ -3,6 +3,7 @@ package se.johannesdahlgren.aoc22.util
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.sign
+import kotlin.math.sqrt
 
 data class Node(val x: Int, val y: Int) {
     var parent: Node? = null
@@ -46,8 +47,10 @@ class AStar(
         return totalPath
     }
 
-    private fun manhattan(current: Node, neighbor: Node): Int {
-        return (abs(current.x - neighbor.x) + abs(current.y - neighbor.y))
+    private fun euclidean(current: Node, neighbor: Node): Int {
+        val x = current.x - neighbor.x
+        val y = current.y - neighbor.y
+        return sqrt((x * x + y * y).toDouble()).toInt()
     }
 
     private fun inBounds(neighbor: Node): Boolean {
@@ -75,7 +78,7 @@ class AStar(
         val visited = mutableSetOf<Node>()
 
         gScore[start] = 0
-        fScore[start] = manhattan(start, goal)
+        fScore[start] = euclidean(start, goal)
 
         while (openSet.isNotEmpty()) {
             val current = openSet.poll() ?: break
@@ -96,10 +99,10 @@ class AStar(
                         || cantEnter(current, neighbor)
                     ) continue
 
-                    val tentativeGScore = gScore[current]!! + manhattan(current, neighbor)
+                    val tentativeGScore = gScore[current]!! + euclidean(current, neighbor)
                     if (tentativeGScore < gScore[neighbor]!!) {
                         gScore[neighbor] = tentativeGScore
-                        fScore[neighbor] = tentativeGScore + manhattan(neighbor, goal)
+                        fScore[neighbor] = tentativeGScore + euclidean(neighbor, goal)
                         if (!openSet.contains(neighbor)) {
                             openSet.add(neighbor)
                         }
