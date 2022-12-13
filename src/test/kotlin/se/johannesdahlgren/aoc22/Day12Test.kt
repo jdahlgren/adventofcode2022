@@ -16,4 +16,16 @@ class Day12Test {
         val day12 = Day12("day12")
         assertThat(day12.fewestStepToBestSignal(), Is.`is`(408))
     }
+
+    @Test
+    fun part2Example() {
+        val day12 = Day12("day12Example")
+        assertThat(day12.fewestStepToBestSignalStartAny(), Is.`is`(29))
+    }
+
+    @Test
+    fun part2() {
+        val day12 = Day12("day12")
+        assertThat(day12.fewestStepToBestSignalStartAny(), Is.`is`(399))
+    }
 }

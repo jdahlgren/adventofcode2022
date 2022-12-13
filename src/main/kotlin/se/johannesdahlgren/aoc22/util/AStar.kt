@@ -117,4 +117,8 @@ class AStar(
     fun getNode(c: Char): Node {
         return map.firstNotNullOf { row -> row.firstOrNull { it.value == c }?.node }
     }
+
+    fun getNodes(c: Char): List<Node> {
+        return map.mapNotNull { row -> row.firstOrNull { it.value == c }?.node }
+    }
 }
