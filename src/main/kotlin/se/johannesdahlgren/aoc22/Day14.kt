@@ -5,36 +5,53 @@ import se.johannesdahlgren.aoc22.util.*
 class Day14(private val fileName: String) {
     private val sandSourcePos = Pos(500, 0)
 
-    fun calcUnitOfSandAtRest(): Int {
+    fun calcUnitOfSandAtRest(floorDistance: Int): Int {
         val paths = readPathsFromInput()
         val restingSand = mutableListOf<Pos>()
 
         val maxY = paths.maxOf { it.getMaxY() }
+        val floorLevel = maxY + floorDistance
         var sand = Pos(sandSourcePos.x, sandSourcePos.y)
-        while (sand.y < maxY) {
+
+        //Hack! Part 1 does not work with floor?
+        val floor = if (floorLevel != maxY) {
+            Path(listOf(Line(Pos(-Int.MAX_VALUE, floorLevel), Pos(Int.MAX_VALUE, floorLevel))))
+        } else {
+            Path(listOf())
+        }
+
+        while (sand.y < floorLevel) {
             sand = Pos(sandSourcePos.x, sandSourcePos.y)
             var prevSandPos = sand.copy()
 
-            while (prevSandPos != sand || sand.y < maxY) {
+            while (prevSandPos != sand || sand.y < floorLevel) {
 
-                if (!isBlocked(sand, Direction.UP, paths, restingSand)) {
+                if (!isBlocked(sand, Direction.UP, paths, restingSand, floor)) {
                     sand.move(Direction.UP)
                 }
-                if (hasNotMoved(prevSandPos, sand) && !isBlocked(sand, Direction.UP_LEFT, paths, restingSand)) {
+                if (hasNotMoved(prevSandPos, sand) && !isBlocked(sand, Direction.UP_LEFT, paths, restingSand, floor)) {
                     sand.move(Direction.UP_LEFT)
                 }
-                if (hasNotMoved(prevSandPos, sand) && !isBlocked(sand, Direction.UP_RIGHT, paths, restingSand)) {
+                if (hasNotMoved(prevSandPos, sand) && !isBlocked(sand, Direction.UP_RIGHT, paths, restingSand, floor)) {
                     sand.move(Direction.UP_RIGHT)
                 }
 
                 if (hasNotMoved(prevSandPos, sand)) {
                     restingSand.add(sand)
-                    break
+                    if (sand == sandSourcePos) {
+                        return restingSand.size
+                    } else {
+                        break
+                    }
+                }
+
+                if (sand == sandSourcePos) {
+                    return restingSand.size
                 }
                 prevSandPos = sand.copy()
             }
 
-//            printCave(paths, sands)
+//            printCave(paths, restingSand, floor)
         }
         return restingSand.size
     }
@@ -45,10 +62,12 @@ class Day14(private val fileName: String) {
         currentSand: Pos,
         nextDirection: Direction,
         paths: List<Path>,
-        restingSand: List<Pos>
+        restingSand: List<Pos>,
+        floor: Path
     ): Boolean {
         val nextPos = currentSand.getNextPos(nextDirection)
         return paths.any { nextPos.isOnPath(it) } || restingSand.any { it == nextPos }
+                || nextPos.isOnPath(floor)
     }
 
     private fun readPathsFromInput() = FileReader.readFileLinesAsString(fileName)
@@ -63,24 +82,26 @@ class Day14(private val fileName: String) {
         }
         .map { Path(it) }
 
-    private fun printCave(paths: List<Path>, restingSand: List<Pos>) {
+    private fun printCave(paths: List<Path>, restingSand: List<Pos>, floor: Path) {
         val maxX = paths.maxOf { it.getMaxX() }
         val maxY = paths.maxOf { it.getMaxY() }
         val minX = paths.minOf { it.getMinX() }
-        val minY = paths.minOf { it.getMinY() }
 
-        for (y in minY - 1..maxY + 1) {
-            for (x in minX - 1..maxX + 1) {
+        for (y in 0..maxY + 3) {
+            for (x in minX - 15..maxX + 15) {
                 val pos = Pos(x, y)
-                if (paths.any { pos.isOnPath(it) }) {
+                if (paths.any { pos.isOnPath(it) } || pos.isOnPath(floor)) {
                     print("#")
                 } else if (restingSand.contains(pos)) {
                     print("o")
+                } else if (pos == sandSourcePos) {
+                    print("+")
                 } else {
                     print(".")
                 }
             }
             println()
         }
+        println()
     }
 }
