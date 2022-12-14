@@ -19,6 +19,15 @@ data class Pos(var x: Int, var y: Int) {
             Direction.DOWN -> y--
             Direction.RIGHT -> x++
             Direction.LEFT -> x--
+            Direction.UP_LEFT -> {
+                x--
+                y++
+            }
+
+            Direction.UP_RIGHT -> {
+                x++
+                y++
+            }
         }
     }
 
@@ -28,6 +37,8 @@ data class Pos(var x: Int, var y: Int) {
             Direction.DOWN -> Pos(x, y - 1)
             Direction.RIGHT -> Pos(x + 1, y)
             Direction.LEFT -> Pos(x - 1, y)
+            Direction.UP_LEFT -> Pos(x - 1, y + 1)
+            Direction.UP_RIGHT -> Pos(x + 1, y + 1)
         }
     }
 
@@ -59,5 +70,15 @@ data class Pos(var x: Int, var y: Int) {
                 }
             }
         }
+    }
+
+    fun isOnLine(line: Line): Boolean {
+        val onX = line.startPos.x <= x && x <= line.endPos.x
+        val onY = line.startPos.y <= y && y <= line.endPos.y
+        return onX && onY
+    }
+
+    fun isOnPath(path: Path): Boolean {
+        return path.lines.any { isOnLine(it) }
     }
 }
