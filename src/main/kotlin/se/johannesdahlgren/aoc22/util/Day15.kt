@@ -24,6 +24,8 @@ class Day15(private val fileName: String) {
         }
     }
 
+    private fun Sensor.manhattanDistance() = pos.manhattanDistance(closestBeaconPos)
+
     fun numberOfPosCantContainBeacon(targetRow: Int): Int {
         val sensors = FileReader.readFileLinesAsString(fileName)
             .map { createSensor(it) }
@@ -54,7 +56,7 @@ class Day15(private val fileName: String) {
     }
 
     private fun getPositionsWhereBeaconCanNotBe(sensor: Sensor, targetRow: Int): List<Pos> {
-        val manhattanDistance = manhattanDistance(sensor)
+        val manhattanDistance = sensor.manhattanDistance()
         val beaconNotHere = mutableListOf<Pos>()
 
         if (abs(sensor.pos.y - manhattanDistance) <= targetRow) {
@@ -63,10 +65,6 @@ class Day15(private val fileName: String) {
                 .forEach { beaconNotHere.add(Pos(it, targetRow)) }
         }
         return beaconNotHere
-    }
-
-    private fun manhattanDistance(sensor: Sensor): Int {
-        return abs(sensor.pos.x - sensor.closestBeaconPos.x) + abs(sensor.pos.y - sensor.closestBeaconPos.y)
     }
 
     private fun printMap(sensors: List<Sensor>, temp: List<Pos>) {

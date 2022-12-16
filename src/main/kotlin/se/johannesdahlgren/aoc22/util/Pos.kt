@@ -1,5 +1,7 @@
 package se.johannesdahlgren.aoc22.util
 
+import kotlin.math.abs
+
 data class Pos(var x: Int, var y: Int) {
     private fun isAdjacent(otherPos: Pos): Boolean {
         return otherPos.x in this.x - 1..this.x + 1 && otherPos.y in this.y - 1..this.y + 1
@@ -72,7 +74,9 @@ data class Pos(var x: Int, var y: Int) {
         }
     }
 
-    fun isOnLine(line: Line): Boolean {
+    fun manhattanDistance(other: Pos) = abs(x - other.x) + abs(y - other.y)
+
+    private fun isOnLine(line: Line): Boolean {
         val onX = line.startPos.x <= x && x <= line.endPos.x
         val onY = line.startPos.y <= y && y <= line.endPos.y
         return onX && onY
